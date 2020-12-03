@@ -1,0 +1,107 @@
+@font-face {
+  font-family: "helveticaregular";
+  src: url("./fonts/helvetica_400-webfont.woff2") format("woff2"), url("./fonts/helvetica_400-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+html {
+  font-family: "helveticaregular", sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.container {
+  border: 1px solid #909090;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+}
+.container_item {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.canvas-wrapper {
+  height: 300px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+.canvas-wrapper canvas {
+  transition: 0.3s;
+  height: 100%;
+  width: auto;
+  border: 2px solid black;
+}
+.canvas-wrapper canvas:hover {
+  border-color: #dede00;
+}
+.canvas-wrapper canvas.acitve {
+  border-color: #dede00;
+}
+.canvas-wrapper_processed {
+  width: 100%;
+  background-color: #dbdbdb;
+  overflow-x: scroll;
+  flex-flow: row;
+  height: 300px;
+}
+.canvas-wrapper_processed canvas {
+  margin: 10px;
+}
+
+.buttons {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+}
+.buttons .button {
+  padding: 10px 0;
+  margin: 10px 0;
+}
+
+.canvas_wrapper_item {
+  position: relative;
+  cursor: pointer;
+}
+
+.disclaimer {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ffffffeb;
+  padding: 10px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #868686a1;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+.modal.is-active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: progress;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="database.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/loading.css">
+
+        <title>Name here</title>
+    </head>
+    <body>
+        <div class="modal">
+            <div class="loading-wrapper">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="container inputs-wrapper">
+                <input id="img_src" type="file" class="button container_item"/>
+                <div class="buttons">
+                    <button class="button" data-action="detect">Detect face</button>
+                    <button class="button" data-action="add">Add to Database</button>
+                    <button class="button" data-action="query">Find similar faces</button>
+                </div>
+            </div>
+            <div class="canvas-wrapper canvas-wrapper_local">
+                <canvas id="local_canvas"></canvas>
+            </div>
+        </div>
+
+        <div class="list-container"></div>
+        <script src="index.js"></script>
+    </body>
+</html>
