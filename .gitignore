@@ -13,3 +13,4 @@
 /src/backend/face_utils/utils/__pycache__/box_utils.cpython-36.pyc
 /src/backend/face_utils/utils/nms/__pycache__/__init__.cpython-36.pyc
 /src/backend/face_utils/utils/nms/__pycache__/py_cpu_nms.cpython-36.pyc
+/.idea
