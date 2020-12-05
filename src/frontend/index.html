@@ -13,18 +13,31 @@
         <title>Name here</title>
     </head>
     <body>
-        <div class="modal">
+        <div class="modal modal_loading">
             <div class="loading-wrapper">
                 <div class="loading-bar"></div>
             </div>
         </div>
         <div class="main">
-            <div class="container inputs-wrapper">
-                <input id="img_src" type="file" class="button container_item"/>
-                <div class="buttons">
-                    <button class="button" data-action="detect">Detect face</button>
-                    <button class="button" data-action="add">Add to Database</button>
-                    <button class="button" data-action="query">Find similar faces</button>
+            <div class="">
+                <div class="container inputs-wrapper is-active">
+                    <input id="img_src" type="file" class="button container_item"/>
+                    <div class="buttons">
+                        <button class="button" data-action="detect">Detect face</button>
+                        <button class="button" data-action="open-modal">Add to Database</button>
+                        <button class="button" data-action="query">Find similar faces</button>
+                    </div>
+                </div>
+                <div class="container database-wrapper">
+                    <div class="database-wrapper_inputs">
+                        <label for="database-id">
+                            database-id
+                            <input id="database-id" name="id" type="text">
+                        </label>
+                    </div>
+                    <div class="buttons">
+                        <button class="button" data-action="add">submit</button>
+                    </div>
                 </div>
             </div>
             <div class="canvas-wrapper canvas-wrapper_local">

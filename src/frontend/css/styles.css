@@ -104,4 +104,35 @@ body {
   cursor: progress;
 }
 
+.database-wrapper {
+  padding: 40px;
+  background: #fff;
+  display: none;
+}
+.database-wrapper_inputs {
+  display: flex;
+  flex-flow: column;
+}
+.database-wrapper_inputs > * {
+  margin: 10px 0;
+}
+
+.database-wrapper,
+.inputs-wrapper {
+  display: none;
+  transition: 0.5s;
+}
+.database-wrapper.is-active,
+.inputs-wrapper.is-active {
+  display: flex;
+}
+.database-wrapper.is-success,
+.inputs-wrapper.is-success {
+  background-color: #40dc40;
+}
+.database-wrapper.is-unsuccessful,
+.inputs-wrapper.is-unsuccessful {
+  background-color: #d92c2c;
+}
+
 /*# sourceMappingURL=styles.css.map */

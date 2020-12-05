@@ -1,23 +1,24 @@
-// const database  = window.database || [];
+const database  = window.database || [];
 //
-// const list = [
-//     {
-//         image: 'base_64',
-//         id: 101,
-//         meta: '{"name": "sanek"}'
-//     },
-//     {
-//         image: 'base_64',
-//         id: 102,
-//         meta: '{ opa: "sanek2" }'
-//     }
-// ]
+const list = [
+    {
+        image: 'base_64',
+        id: 101,
+        meta: '{"name": "sanek"}'
+    },
+    {
+        image: 'base_64',
+        id: 102,
+        meta: '{ opa: "sanek2" }'
+    }
+]
 const imageInput = document.getElementById('img_src');
-const modal = document.querySelector('.modal');
+const modalLoading = document.querySelector('.modal_loading');
 
 let fr; // Variable to store the file reader
 let is_img_ready = false;
 let imageCache = null;
+
 
 const drawDisclaimer = (info) => {
     return `
@@ -40,44 +41,44 @@ const addDisclaimer = (element, info) => {
     }
 }
 
-// const writeToDataBase = (data) => {
-//     if (!data) return;
-//
-//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-//
-//     const newData = {
-//         id: localData.length,
-//         meta: {
-//             name: 'User#' + localData.length
-//         },
-//         image: data,
-//     }
-//
-//     localData.push(newData);
-//
-//     localStorage.setItem('imageDataBase', JSON.stringify(localData));
-//
-//     return 'Success';
-// }
-//
-// const detectFace = (data) => {
-//     if (!data) return;
-//
-//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-//
-//
-//
-//     return [{
-//         id: localData.length,
-//         name: 'User#' + localData.length,
-//         image: data,
-//     }]; // lol
-// }
-//
-// const findSimilarFaces = (data) => {
-//     if (!data) return;
-//     return database
-// }
+const writeToDataBase = (data) => {
+    if (!data) return;
+
+    const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
+
+    const newData = {
+        id: localData.length,
+        meta: {
+            name: 'User#' + localData.length
+        },
+        image: data,
+    }
+
+    localData.push(newData);
+
+    localStorage.setItem('imageDataBase', JSON.stringify(localData));
+
+    return 'Success';
+}
+
+const detectFace = (data) => {
+    if (!data) return;
+
+    const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
+
+
+
+    return [{
+        id: localData.length,
+        meta: 'User#' + localData.length,
+        image: data,
+    }]; // lol
+}
+
+const findSimilarFaces = (data) => {
+    if (!data) return;
+    return database
+}
 
 const readImage = (image = null) => {
     const imageData = image ? image : imageInput;
@@ -90,6 +91,30 @@ const readImage = (image = null) => {
     fr = new FileReader();
     fr.onload = updateImage;
     fr.readAsDataURL(imageData.files[0])
+}
+
+const toggleDatabaseWindow = () => {
+    const databaseWrapper = document.querySelector('.database-wrapper');
+    const inputsWrapper = document.querySelector('.inputs-wrapper');
+
+    if (databaseWrapper && inputsWrapper) {
+        databaseWrapper.classList.toggle('is-active');
+        inputsWrapper.classList.toggle('is-active');
+    }
+}
+
+const showStatusAddtoDatabase = (status) => {
+    const results = {
+        good: 'is-success',
+        bad: 'is-unsuccessful'
+    }
+    const inputsWrapper = document.querySelector('.inputs-wrapper');
+
+    inputsWrapper.classList.add(results[status]);
+
+    setTimeout(() => {
+        inputsWrapper.classList.remove(results[status]);
+    }, 1500)
 }
 
 function updateImage() {
@@ -167,7 +192,7 @@ function loadProcessedImage(data) {
                 300
                 );
         };
-        img.src = 'data:image/jpeg;base64,' + data;
+        img.src = info.image;
         // img.src = info.image;
 
         newCanvas.setAttribute('User-meta', info.meta);
@@ -190,34 +215,77 @@ function loadProcessedImage(data) {
         const tempResult = {
             image: data,
             id: 0,
-            meta: ''
+            meta: 'ddd'
         }
         renderImage(tempResult);
     }
     container.insertAdjacentElement('beforeend',newListImages)
 }
 
-
-async function processImage(element = null,action = 'query') {
+function processImage(element = null,action = 'query') {
     if (!is_img_ready) {
         alert('No image to process!');
         return;
     }
-    //Send the image to the server and wait for a response
+    // если по какой то причине не удалось обработать изображение то остановить код
     if (!document.getElementById('local_canvas')) return;
-
+    // переводим изображение
     const image_data = document.getElementById('local_canvas')
         .toDataURL('image/jpeg');
 
-    const op = action;
-    // console.log('action = ' , op);
-    // const mapOperations = {
-    //     add: writeToDataBase,
-    //     detect: detectFace,
-    //     query: findSimilarFaces,
-    // }
+    // если действие было открыть модальное, значит нам нужно лишь поменять интерфейс на добавление id
+    // и дальше оостановить код return; то есть ниже уже не пойдет.
+    if (action === 'open-modal') {
+        toggleDatabaseWindow();
+        return;
+    }
+    /*
+    mapOperations
+    response
 
-    modal.classList.toggle('is-active');
+    нужны для эмуляции сервера при тестировании логики кода
+     */
+    /*
+    const mapOperations = {
+        add: writeToDataBase,
+        detect: detectFace,
+        query: findSimilarFaces,
+    }
+    const response = new Promise((resolutionFunc) => {
+        setTimeout(() => {
+            let result = null;
+            if (action === 'add') {
+                result = 'Succsess'
+            } else {
+                result = mapOperations[action](image_data)
+            }
+            resolutionFunc(result)
+        }, 1500)
+
+    })
+
+    response.then((result) => {
+        modalLoading.classList.toggle('is-active');
+        if (action === 'add') {
+            toggleDatabaseWindow();
+            showStatusAddtoDatabase('good')
+        }
+
+        if (result === 'Succsess') {
+            return;
+        }
+        loadProcessedImage(result);
+    })
+    */
+
+
+    // открываем окно загрузки перед отправкой запроса
+    modalLoading.classList.toggle('is-active');
+
+    // берем инпут который отвечает за id при добавлении в базу
+    const imageIdElement = document.querySelector('#database-id');
+    // если инпут есть &&(и) в инпуте есть значение то берем его, если нету то null
+    const imageId = (imageIdElement && imageIdElement.value) || null;
 
     $.ajax({
         url: "http://localhost:5000/process_image",
@@ -225,34 +293,53 @@ async function processImage(element = null,action = 'query') {
         contentType: 'application/json',
         crossDomain: true,
         data: JSON.stringify({
-            image_data: image_data,
+            image_data: {
+                id: imageId,
+                data: image_data
+            },
             msg: 'This is image data',
-            operation: op
+            operation: action
         }),
         success: function (data) {
-            modal.classList.toggle('is-active');
+            // закрыть окно загрузки
+            modalLoading.classList.toggle('is-active');
 
+            // показать визуально что все успешно прошло
+            showStatusAddtoDatabase('good')
+
+            // обработаем результат который получили от сервера
             let parsed = null
             try {
                 parsed = JSON.parse(data);
             } catch (e) {
                 console.log('error = ', e)
             }
+            // есть сервер вернул Success значит просто вывести сообщение
             if (data === 'Success') {
                 alert('Добавлено успешно')
             } else {
+                // если это какая то инфомрация другая то выввести изображение
                 loadProcessedImage(parsed);
             }
         },
         error: function (err) {
             console.log('error =  ', err)
+            // показать визуально что произошла ошибка
+            showStatusAddtoDatabase('bad')
+
         }
     });
 }
-
+// слушатель на инпуте изображения, как только добавляем изображение сразу вызывается функция обработки его
 imageInput.addEventListener('input', () => {
     readImage();
 })
+// находим все элементы с атрибутом data-action и для каждого ставим слушатель
+// в слушателе вызываем processImage
+// первый аргумент - изображение и там null
+// второй аргумент - действие, берем его и самого значения прописаного в data-action
+// например data-action="add"
+
 document.querySelectorAll('[data-action]').forEach((button) => {
     button.addEventListener('click', () => {
         processImage(null,button.dataset.action)

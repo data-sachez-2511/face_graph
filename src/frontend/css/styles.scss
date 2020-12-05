@@ -108,3 +108,30 @@ body {
     cursor: progress;
   }
 }
+
+.database-wrapper {
+  padding: 40px;
+  background: #fff;
+  display: none;
+  &_inputs {
+    display: flex;
+    flex-flow: column;
+    &> * {
+      margin: 10px 0;
+    }
+  }
+}
+.database-wrapper,
+.inputs-wrapper {
+  display: none;
+  transition: 0.5s;
+  &.is-active {
+    display: flex;
+  }
+  &.is-success {
+    background-color: #40dc40;
+  }
+  &.is-unsuccessful {
+    background-color: #d92c2c;
+  }
+}
