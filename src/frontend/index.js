@@ -1,17 +1,17 @@
-const database  = window.database || [];
-//
-const list = [
-    {
-        image: 'base_64',
-        id: 101,
-        meta: '{"name": "sanek"}'
-    },
-    {
-        image: 'base_64',
-        id: 102,
-        meta: '{ opa: "sanek2" }'
-    }
-]
+// const database  = window.database || [];
+// //
+// const list = [
+//     {
+//         image: 'base_64',
+//         id: 101,
+//         meta: '{"name": "sanek"}'
+//     },
+//     {
+//         image: 'base_64',
+//         id: 102,
+//         meta: '{ opa: "sanek2" }'
+//     }
+// ]
 const imageInput = document.getElementById('img_src');
 const modalLoading = document.querySelector('.modal_loading');
 
@@ -21,6 +21,7 @@ let imageCache = null;
 
 
 const drawDisclaimer = (info) => {
+    // рисуем простой дисклеймер и возвращаем его
     return `
         <div class="disclaimer">
             <p>Meta = ${ info.meta }</p>
@@ -31,54 +32,60 @@ const drawDisclaimer = (info) => {
 
 const addDisclaimer = (element, info) => {
     if (element instanceof HTMLElement) {
+        // вешаем слушатель на изображние
         element.addEventListener('click', () => {
+            // добавляем класс active что бы потом видеть на какое изображение мы нажимали
             element.classList.add('acitve')
+            // запускаем обработку такую же как при нажатии кнопок в интерфейса
+            // первый аргумент - текущее изображение
+            // второй аргумент - действие - поиск похожих
             processImage(element, 'query');
         });
+        // получаем дисклеймер с нашей информацией
         const disclaimer = drawDisclaimer(info);
-
+        // добавляем дисклеймер к изображению
         element.insertAdjacentHTML('afterend', disclaimer);
     }
 }
 
-const writeToDataBase = (data) => {
-    if (!data) return;
-
-    const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-
-    const newData = {
-        id: localData.length,
-        meta: {
-            name: 'User#' + localData.length
-        },
-        image: data,
-    }
-
-    localData.push(newData);
-
-    localStorage.setItem('imageDataBase', JSON.stringify(localData));
-
-    return 'Success';
-}
-
-const detectFace = (data) => {
-    if (!data) return;
-
-    const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-
-
-
-    return [{
-        id: localData.length,
-        meta: 'User#' + localData.length,
-        image: data,
-    }]; // lol
-}
-
-const findSimilarFaces = (data) => {
-    if (!data) return;
-    return database
-}
+// const writeToDataBase = (data) => {
+//     if (!data) return;
+//
+//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
+//
+//     const newData = {
+//         id: localData.length,
+//         meta: {
+//             name: 'User#' + localData.length
+//         },
+//         image: data,
+//     }
+//
+//     localData.push(newData);
+//
+//     localStorage.setItem('imageDataBase', JSON.stringify(localData));
+//
+//     return 'Success';
+// }
+//
+// const detectFace = (data) => {
+//     if (!data) return;
+//
+//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
+//
+//
+//
+//     return [{
+//         id: localData.length,
+//         meta: 'User#' + localData.length,
+//         image: data,
+//     }]; // lol
+// }
+//
+// const findSimilarFaces = (data) => {
+//     if (!data) return;
+//     return database
+// }
 
 const readImage = (image = null) => {
     const imageData = image ? image : imageInput;
@@ -94,25 +101,30 @@ const readImage = (image = null) => {
 }
 
 const toggleDatabaseWindow = () => {
+    // находим две обертки кнопок и инпута id
     const databaseWrapper = document.querySelector('.database-wrapper');
     const inputsWrapper = document.querySelector('.inputs-wrapper');
 
     if (databaseWrapper && inputsWrapper) {
+        // если оба есть то переключаем их состояние
         databaseWrapper.classList.toggle('is-active');
         inputsWrapper.classList.toggle('is-active');
     }
 }
 
-const showStatusAddtoDatabase = (status) => {
+const showStatusAddtoDatabase = (status = 'good') => {
+    // нужно для того что бы перевести статут в нужный класс
     const results = {
         good: 'is-success',
         bad: 'is-unsuccessful'
     }
+    // поле трех кнопок
     const inputsWrapper = document.querySelector('.inputs-wrapper');
-
+    // показываем результат
     inputsWrapper.classList.add(results[status]);
 
     setTimeout(() => {
+        // спустя 1500 мс удаляем класс
         inputsWrapper.classList.remove(results[status]);
     }, 1500)
 }
@@ -141,12 +153,8 @@ function updateImage() {
     };
     const src = imageCache ? imageCache : fr.result;
 
-    console.log('src = ', src);
-
     img.src = src;
-
     imageCache = null;
-
     is_img_ready = true;
 }
 
@@ -245,6 +253,8 @@ function processImage(element = null,action = 'query') {
 
     нужны для эмуляции сервера при тестировании логики кода
      */
+
+
     /*
     const mapOperations = {
         add: writeToDataBase,
@@ -259,6 +269,7 @@ function processImage(element = null,action = 'query') {
             } else {
                 result = mapOperations[action](image_data)
             }
+            // console.log('result = ', result);
             resolutionFunc(result)
         }, 1500)
 
@@ -304,8 +315,11 @@ function processImage(element = null,action = 'query') {
             // закрыть окно загрузки
             modalLoading.classList.toggle('is-active');
 
-            // показать визуально что все успешно прошло
-            showStatusAddtoDatabase('good')
+            if (action === 'add') {
+                toggleDatabaseWindow();
+                // показать визуально что все успешно прошло
+                showStatusAddtoDatabase('good')
+            }
 
             // обработаем результат который получили от сервера
             let parsed = null
