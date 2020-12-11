@@ -20,6 +20,8 @@ let is_img_ready = false;
 let imageCache = null;
 let rawImage = null
 
+let max_face_size = 256
+
 const drawDisclaimer = (info) => {
     // рисуем простой дисклеймер и возвращаем его
     return `
@@ -146,10 +148,12 @@ function updateImage() {
     newLocal.id = 'local_canvas';
 
     img.onload = function() {
-        newLocal.width  = 250;
-        newLocal.height = 300;
+        const max_dim = img.width < img.height ? img.height: img.width;
+        const scale = max_face_size / max_dim;
+        newLocal.width  = Math.floor( scale * img.width );
+        newLocal.height = Math.floor( scale * img.height );
         const ctx = newLocal.getContext("2d");
-        ctx.drawImage(img,0,0, 250, 300);
+        ctx.drawImage(img,0,0, newLocal.width, newLocal.height);
         //alert(canvas.toDataURL("image/png"));
     };
     const src = imageCache ? imageCache : fr.result;
@@ -189,16 +193,18 @@ function loadProcessedImage(data) {
 
         img.onload = function() {
             const localCanvas = document.getElementById('local_canvas');
-            newCanvas.width  = 250;
-            newCanvas.height = 300;
+            const max_dim = img.width < img.height ? img.height: img.width;
+            const scale = max_face_size / max_dim;
+            newCanvas.width  = Math.floor( scale * img.width );
+            newCanvas.height = Math.floor( scale * img.height );
             const ctx = newCanvas.getContext('2d');
 
             ctx.drawImage(
                 img,
                 0,
                 0,
-                250,
-                300
+                newCanvas.width,
+                newCanvas.height
                 );
         };
         img.src = info.image;
