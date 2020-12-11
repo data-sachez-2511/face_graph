@@ -19,8 +19,9 @@ class HNSW:
             self.map_labels = {'map': {}, 'current_size': 0}
 
     def add(self, vecs, label=None):
-        vecs = np.array(vecs)
-        norms = np.repeat(np.linalg.norm(vecs).reshape((len(vecs), 1)), 512, axis=1)
+        if len(vecs.shape) == 1:
+            vecs = np.array([vecs])
+        norms = np.repeat(np.linalg.norm(vecs, axis=1).reshape((len(vecs), 1)), 512, axis=1)
         vecs = vecs / norms
         if self.index.get_current_count() == 0:
             if vecs.shape[0] == 1:
@@ -31,7 +32,7 @@ class HNSW:
         k = min(self.map_labels['current_size'], cfg.max_channels)
         labels_q, distances_q = self.index.knn_query(vecs, k=k)
         if vecs.shape[0] == 1:
-            if labels_q[0][0] == label:
+            if distances_q[0][0] <= cfg.threshold:
                 return [], "You try add similar face in database."
             else:
                 self.add_(vecs[0], label)
@@ -45,7 +46,7 @@ class HNSW:
                     break
         result = {user: [] for user in finded_users}
         for user in result:
-            result = [_ for _ in finded_users if _ != user]
+            result[user] = [_ for _ in finded_users if _ != user]
         return result, "Add connected persons."
 
     def add_(self, vec, label):
@@ -63,3 +64,7 @@ class HNSW:
             for j in range(len(labels[i])):
                 labels[i][j] = self.map_labels['map'][labels[i][j]]
         return labels, dists
+
+    def save(self):
+        self.index.save_index(self.path)
+        dump(self.map_labels, cfg.labels_path)

@@ -14,21 +14,11 @@ class FacePipe:
         self.detector = Detector(cfg)
         self.embedder = Embedder()
 
-    def __call__(self, images):
-        dets = sum([self.detector(images[i: i + MAX_BATCH_SIZE]) for i in range(0, len(images), MAX_BATCH_SIZE)], [])
-        faces = [[align_face(images[i], det[5:]) for det in dets[i]] for i in range(len(dets))]
-        idx_map = {}
-        faces_batch = []
-        for i in range(len(faces)):
-            for j in range(len(faces[i])):
-                idx_map[len(idx_map)] = i
-                faces_batch.append(faces[i][j])
-        embeds = []
-        for i in range(0, len(faces_batch), MAX_BATCH_SIZE):
-            embeds.append(self.embedder(faces_batch[i:i + MAX_BATCH_SIZE]))
-        embeds = np.concatenate(embeds)
-        for i in range(len(embeds)):
-            idx = idx_map[i]
-            face = faces_batch[i]
-            embed = embeds[i]
-            yield idx, face, embed
+    def __call__(self, image, with_detect=False):
+        if with_detect:
+            dets = self.detector(image)
+            faces = [align_face(image, det[5:]) for det in dets]
+            embeds = self.embedder(faces)
+            return faces, embeds
+        else:
+            return self.embedder([image])

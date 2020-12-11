@@ -26,6 +26,7 @@ cfg_mnet.dsize = (300, 300, 3)
 cfg_mnet.confidence_threshold = 0.6
 cfg_mnet.top_k = 5000
 cfg_mnet.nms_threshold = 0.4
+cfg_mnet.confidence_threshold = 0.9
 cfg_mnet.keep_top_k = 750
 cfg_mnet.mean_tensor = torch.tensor((104, 117, 123)).unsqueeze(0).unsqueeze(0)
 # ================================Retina Resnet50 config=========================================
