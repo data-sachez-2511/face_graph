@@ -50,7 +50,7 @@ body {
 .canvas-wrapper canvas:hover {
   border-color: #dede00;
 }
-.canvas-wrapper canvas.acitve {
+.canvas-wrapper canvas.active {
   border-color: #dede00;
 }
 .canvas-wrapper_processed {
