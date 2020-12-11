@@ -21,7 +21,7 @@ let imageCache = null;
 let rawImage = null;
 let lastActive = null;
 
-let max_face_size = 256
+let max_face_size = 180
 
 const drawDisclaimer = (info) => {
     // рисуем простой дисклеймер и возвращаем его
