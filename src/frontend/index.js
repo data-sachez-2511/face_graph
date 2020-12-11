@@ -18,7 +18,7 @@ const modalLoading = document.querySelector('.modal_loading');
 let fr; // Variable to store the file reader
 let is_img_ready = false;
 let imageCache = null;
-
+let rawImage = null
 
 const drawDisclaimer = (info) => {
     // рисуем простой дисклеймер и возвращаем его
@@ -130,6 +130,7 @@ const showStatusAddtoDatabase = (status = 'good') => {
 }
 
 function updateImage() {
+    rawImage = fr.result;
     console.log('start updateImage');
     const img = new Image();
     const wrapperLocalCanvas = document.querySelector('.canvas-wrapper_local');
@@ -238,8 +239,7 @@ function processImage(element = null,action = 'query') {
     // если по какой то причине не удалось обработать изображение то остановить код
     if (!document.getElementById('local_canvas')) return;
     // переводим изображение
-    const image_data = document.getElementById('local_canvas')
-        .toDataURL('image/jpeg');
+    const image_data = rawImage;
 
     // если действие было открыть модальное, значит нам нужно лишь поменять интерфейс на добавление id
     // и дальше оостановить код return; то есть ниже уже не пойдет.
