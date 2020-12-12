@@ -23,9 +23,10 @@
                 <div class="container inputs-wrapper is-active">
                     <input id="img_src" type="file" class="button container_item"/>
                     <div class="buttons">
-                        <button class="button" data-action="detect">Detect face</button>
-                        <button class="button" data-action="open-modal">Add to Database</button>
-                        <button class="button" data-action="query">Find similar faces</button>
+                        <button class="button" style="visibility: hidden" id="detect_button" data-action="detect">Detect faces</button>
+                        <button class="button" style="visibility: hidden" id="link_button" data-action="open-modal">Add links</button>
+                        <button class="button" style="visibility: hidden" id="add_button" data-action="add">Add face</button>
+                        <button class="button" style="visibility: hidden" id="find_button" data-action="query">Find similar faces</button>
                     </div>
                 </div>
                 <div class="container database-wrapper">

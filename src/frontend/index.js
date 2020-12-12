@@ -1,25 +1,13 @@
-// const database  = window.database
-// //
-// const list = [
-//     {
-//         image: 'base_64',
-//         id: 101,
-//         meta: '{"name": "sanek"}'
-//     },
-//     {
-//         image: 'base_64',
-//         id: 102,
-//         meta: '{ opa: "sanek2" }'
-//     }
-// ]
 const imageInput = document.getElementById('img_src');
 const modalLoading = document.querySelector('.modal_loading');
 
 let fr; // Variable to store the file reader
+let mainImage = null;
 let is_img_ready = false;
 let imageCache = null;
 let rawImage = null;
 let lastActive = null;
+let operation = null;
 
 let max_face_size = 180
 
@@ -33,7 +21,27 @@ const drawDisclaimer = (info) => {
     `
 }
 
-const addDisclaimer = (element, info) => {
+const drawDisclaimer1 = (info) => {
+    // рисуем простой дисклеймер и возвращаем его
+    return `
+        <div class="disclaimer">
+            <p>Meta = ${ info.meta }</p>
+            <p>id = ${ info.id }</p>
+        </div> 
+    `
+}
+
+const drawDisclaimer2 = (info) => {
+    // рисуем простой дисклеймер и возвращаем его
+    return `
+        <div class="disclaimer">
+            <p>Meta = ${ info.meta }</p>
+            <p>id = ${ info.id }</p>
+        </div> 
+    `
+}
+
+const addDisclaimer = (element, info, action) => {
     if (element instanceof HTMLElement) {
         // вешаем слушатель на изображние
         element.addEventListener('click', () => {
@@ -48,47 +56,17 @@ const addDisclaimer = (element, info) => {
             // processImage(element, 'query');
         });
         // получаем дисклеймер с нашей информацией
-        const disclaimer = drawDisclaimer(info);
-        // добавляем дисклеймер к изображению
-        element.insertAdjacentHTML('afterend', disclaimer);
+        if(action === "detect1"){
+            const disclaimer = drawDisclaimer(info);
+            // добавляем дисклеймер к изображению
+            element.insertAdjacentHTML('afterend', disclaimer);
+        }
+
+
+
     }
 }
 
-// const writeToDataBase = (data) => {
-//     console.log('data write = ', data);
-//     if (!data) return;
-//
-//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-//
-//     const newData = {
-//         id: localData.length,
-//         meta: {
-//             name: 'User#' + localData.length
-//         },
-//         image: data,
-//     }
-//
-//     localData.push(data.replace(/data:image\/jpeg;base64,/, ''));
-//     console.log('data push', data);
-//
-//     localStorage.setItem('imageDataBase', JSON.stringify(localData));
-//
-//     return 'Success';
-// }
-//
-// const detectFace = (data) => {
-//     if (!data) return;
-//
-//     const localData = JSON.parse(localStorage.getItem('imageDataBase')) || [];
-//     const image = data.replace(/data:image\/jpeg;base64,/, '');
-//     console.log('database =',  database);
-//     return database; // lol
-// }
-//
-// const findSimilarFaces = (data) => {
-//     if (!data) return;
-//     return database
-// }
 
 const readImage = () => {
     const imageData = imageInput;
@@ -165,16 +143,20 @@ function updateImage(image = null) {
         src = fr.result;
     }
     console.log('src = ', src);
+
     img.src = src;
     imageCache = null;
     is_img_ready = true;
+    document.getElementById('detect_button').style.visibility = 'visible';
+    document.getElementById('link_button').style.visibility = 'visible';
 }
 
-function loadProcessedImage(data) {
+function loadProcessedImage(data, action) {
     const container = document.querySelector('.list-container');
     const newListImages = document.createElement('div');
     newListImages.classList.add('canvas-wrapper')
-    newListImages.classList.add('canvas-wrapper_processed')
+    if (action === "detect")
+        newListImages.classList.add('canvas_detections')
 
     const placeForCanvas = newListImages;
 
@@ -185,7 +167,7 @@ function loadProcessedImage(data) {
     if (!data) return;
 
     const renderImage = (info) => {
-        console.log('info = ', info);
+        // console.log('info = ', info);
 
         if (!placeForCanvas || !info) return;
 
@@ -228,9 +210,9 @@ function loadProcessedImage(data) {
         }
         // img.src = info.image;
 
-        newCanvas.setAttribute('User-meta', info.meta);
-        newCanvas.setAttribute('User-id', info.id);
-        newCanvas.classList.add('image-disclaimer')
+        // newCanvas.setAttribute('User-meta', info.meta);
+        // newCanvas.setAttribute('User-id', info.id);
+        // newCanvas.classList.add('image-disclaimer')
 
         addDisclaimer(newCanvas, info);
 
@@ -238,9 +220,9 @@ function loadProcessedImage(data) {
     }
 
     if (typeof data === 'object') {
-        console.log('data === object')
+        // console.log('data === object')
         data.forEach((image) => {
-            console.log('iteration')
+            // console.log('iteration')
             renderImage(image);
         })
     } else {
@@ -263,17 +245,20 @@ function processImage(element = null,action = 'query') {
     let image = null;
     // если по какой то причине не удалось обработать изображение то остановить код
     if (!document.getElementById('local_canvas')) return;
+    console.log('before selector');
+    if (document.querySelector('.canvas-wrapper.canvas_detections .active')) {
 
-    if (document.querySelector('.canvas-wrapper .active')) {
-
-        image = document.querySelector('.canvas-wrapper .active')
+        image = document.querySelector('.canvas-wrapper.canvas_detections .active')
             .toDataURL("image/png")
-        console.log('image = ', image);
-        console.log('read image');
+        // console.log('image = ', image);
+        // console.log('read image');
         readImage(image);
+        console.log('SELECT IMAGE: ', image);
     }
     // переводим изображение
-    const image_data = image ? image :  rawImage;
+    console.log('rawImage: ', rawImage)
+    console.log('lastActive: ', lastActive)
+    const image_data = lastActive ? lastActive :  rawImage;
 
 
     // если действие было открыть модальное, значит нам нужно лишь поменять интерфейс на добавление id
@@ -282,46 +267,6 @@ function processImage(element = null,action = 'query') {
         toggleDatabaseWindow();
         return;
     }
-    /*
-    mapOperations
-    response
-
-    нужны для эмуляции сервера при тестировании логики кода
-    если нужно подебажить то расскоментируй строки:
-
-    1; 51-88; 262-293 и закомментируй 304-348
-     */
-
-
-
-    // const mapOperations = {
-    //     add: writeToDataBase,
-    //     detect: detectFace,
-    //     query: findSimilarFaces,
-    // }
-    // const response = new Promise((resolutionFunc) => {
-    //     setTimeout(() => {
-    //         const result = mapOperations[action](image_data)
-    //         console.log('result = ', result);
-    //         resolutionFunc(result)
-    //     }, 1500)
-    //
-    // })
-    //
-    // response.then((result) => {
-    //     modalLoading.classList.toggle('is-active');
-    //     if (action === 'add') {
-    //         toggleDatabaseWindow();
-    //         showStatusAddtoDatabase('good')
-    //     }
-    //
-    //     if (result === 'Success') {
-    //         return;
-    //     }
-    //     loadProcessedImage(result);
-    // })
-
-
 
     // открываем окно загрузки перед отправкой запроса
     modalLoading.classList.toggle('is-active');
@@ -361,12 +306,13 @@ function processImage(element = null,action = 'query') {
             } catch (e) {
                 console.log('error = ', e)
             }
+            alert(parsed['message'])
             // есть сервер вернул Success значит просто вывести сообщение
             if (data === 'Success') {
                 alert('Добавлено успешно')
             } else {
                 // если это какая то инфомрация другая то выввести изображение
-                loadProcessedImage(parsed);
+                loadProcessedImage(parsed['result'], action);
             }
         },
         error: function (err) {
@@ -388,7 +334,8 @@ imageInput.addEventListener('input',readImage);
 document.querySelectorAll('[data-action]').forEach((button) => {
     button.addEventListener('click', () => {
         const active = document.querySelector('.list-container .active');
-        lastActive = active;
+        console.log('active: ', active)
+        lastActive = active && active.toDataURL("image/jpeg");
         updateImage(active);
         const list = document.querySelector('.list-container');
         list.innerHTML = '';
