@@ -59,7 +59,7 @@ class Manage:
         result = []
         for i in range(len(labels[0])):
             for face in Face.select().where(Face.id == labels[0][i]):
-                result.append({'image': face.face_blob, 'id': face.id, 'meta': face.meta,
+                result.append({'image': face.face_blob, 'id': str(face.id), 'meta': face.meta,
                                'prob': normalize_prob(distances[0][i])})
         result = sorted(result, key=lambda x: x['prob'], reverse=True)
         print(len(result))
@@ -67,14 +67,25 @@ class Manage:
 
     def neighbors(self, face_id):
         result = []
+        print('face_id: {}'.format(face_id))
+        print(Face.select().where(Face.id == face_id).count())
         for face_ in Face.select().where(Face.id == face_id):
-            neighbors = list(map(int, face_.neighbors.split(',')))
+            if face_.neighbors == '':
+                neighbors = []
+            else:
+                neighbors = []
+                neighbors1 = face_.neighbors.split(',')
+                for _ in neighbors1:
+                    if _ != '':
+                        neighbors.append(int(_))
+            print(neighbors)
             for idx in neighbors:
                 for neighbor_face in Face.select().where(Face.id == idx):
                     result.append(
-                        {'image': neighbor_face.face_blob, 'id': neighbor_face.id, 'meta': neighbor_face.meta})
+                        {'image': neighbor_face.face_blob, 'id': str(neighbor_face.id), 'meta': neighbor_face.meta})
                     break
             break
+        print('len: {}'.format(len(result)))
         return result
 
     def detect(self, image):

@@ -74,9 +74,20 @@ body {
   margin: 10px 0;
 }
 
+.buttons .button.hidden {
+  visibility: hidden;
+}
 .canvas_wrapper_item {
   position: relative;
   cursor: pointer;
+}
+
+.canvas-wrapper_scrolled {
+  width: 100%;
+  background-color: #dbdbdb;
+  overflow-x: scroll;
+  flex-flow: row;
+  height: 300px;
 }
 
 .disclaimer {

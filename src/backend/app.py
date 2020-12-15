@@ -20,10 +20,10 @@ def cv_engine(img, operation, id):
         faces = [encode_image(_).decode("utf-8") for _ in manage_.detect(img)]
         message = 'Find {} faces.'.format(len(faces))
         return {'result': faces, 'message': message}
-    elif operation == 'add_face':
+    elif operation == 'add':
         message = manage_.add(img, label=id, meta=str({'id': id}), with_detect=False)
         return {'result': None, 'message': message}
-    elif operation == 'add_link':
+    elif operation == 'links':
         message = manage_.add(img, label=None, meta='', with_detect=True)
         return {'result': None, 'message': message}
     elif operation == 'query':
@@ -69,12 +69,19 @@ def process_image():
             return 'Server Error!', 500
         operation = request.json['operation']
         print('Operation: {}'.format(operation))
+        # print('Request: {}'.format(request.json))
         id = request.json['image_data']['id']
-        image_data = None
+        img = None
         if operation != 'neighbors':
+            if request.json['image_data']['data'] == None:
+                return "", 500
             image_data = request.json['image_data']['data'][23:].encode()
-        img = read_image(image_data)
+            img = read_image(image_data)
+        if id:
+            id = int(id)
+            print('ID: {}, {}'.format(type(id), id))
         result = cv_engine(img, operation, id)
+        # print('Response: {}'.format(result))
         return json.dumps(result), 200
     except Exception as e:
         print(e)
