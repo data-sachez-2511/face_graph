@@ -30,26 +30,43 @@ const drawDisclaimer = (info) => {
     // рисуем простой дисклеймер и возвращаем его
     return `
         <div class="disclaimer">
-            <p>id = ${info.id}</p>
+<!--            <p>id = ${info.id}</p>-->
         </div> 
     `
 }
 
 const drawDisclaimer1 = (info) => {
     // рисуем простой дисклеймер и возвращаем его
-    return `
-        <div class="disclaimer">
-            <p>id = ${info.id}</p>
-            <p>prob = ${info.prob}</p>
+    if (info.prob > 80) {
+        return `
+        <div class="disclaimer green">
+<!--            <p>id = ${info.id}</p>-->
+            <span class="badge badge-success">${info.prob}</span>
         </div> 
     `
+    }
+    if (info.prob < 20) {
+        return `
+        <div class="disclaimer red">
+<!--            <p>id = ${info.id}</p>-->
+            <span class="badge badge-important">${info.prob}</span>
+        </div> 
+    `
+    }
+    return `
+        <div class="disclaimer orange">
+<!--            <p>id = ${info.id}</p>-->
+            <span class="badge badge-warning">${info.prob}</span>
+        </div> 
+    `
+
 }
 
 const drawDisclaimer2 = (info) => {
     // рисуем простой дисклеймер и возвращаем его
     return `
         <div class="disclaimer">
-            <p>id = ${info.id}</p>
+<!--            <p>id = ${info.id}</p>-->
         </div> 
     `
 }
@@ -221,7 +238,7 @@ function loadProcessedImage(data, action) {
         const img = new Image();
 
         img.onload = function () {
-            const localCanvas = document.getElementById('local_canvas');
+            // const localCanvas = document.getElementById('local_canvas');
             const max_dim = img.width < img.height ? img.height : img.width;
             const scale = max_face_size / max_dim;
             newCanvas.width = Math.floor(scale * img.width);

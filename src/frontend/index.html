@@ -1,52 +1,66 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-        <script src="database.js"></script>
-        <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/loading.css">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="database.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
 
-        <title>Name here</title>
-    </head>
-    <body>
-        <div class="modal modal_loading">
-            <div class="loading-wrapper">
-                <div class="loading-bar"></div>
+    <title>Name here</title>
+</head>
+<body>
+<div class="modal modal_loading">
+    <div class="loading-wrapper">
+        <div class="loading-bar"></div>
+    </div>
+</div>
+<div class="main">
+    <div class="">
+        <div class="container inputs-wrapper is-active">
+            <div style="position:relative;">
+                <a class='btn btn-primary' href='javascript:;'>
+                    Загрузите картинку
+                    <input type="file" id="img_src"
+                           style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;'
+                           name="file_source">
+                </a>
+                &nbsp;
+                <span class='label label-info' id="upload-file-info"></span>
+            </div>
+            <div class="buttons">
+                <button class="button hidden" id="detect_button" data-action="detect">Detect faces</button>
+                <button class="button hidden" id="link_button" data-action="links">Add links</button>
+                <button class="button hidden" id="add_button">Add face</button>
+                <button class="button hidden" id="find_button" data-action="query">Find similar faces</button>
             </div>
         </div>
-        <div class="main">
-            <div class="">
-                <div class="container inputs-wrapper is-active">
-                    <input id="img_src" type="file" class="button container_item"/>
-                    <div class="buttons">
-                        <button class="button hidden" id="detect_button" data-action="detect">Detect faces</button>
-                        <button class="button hidden" id="link_button" data-action="links">Add links</button>
-                        <button class="button hidden" id="add_button">Add face</button>
-                        <button class="button hidden" id="find_button" data-action="query">Find similar faces</button>
-                    </div>
-                </div>
-                <div class="container database-wrapper">
-                    <div class="database-wrapper_inputs">
-                        <label for="database-id">
-                            database-id
-                            <input id="database-id" name="id" type="text">
-                        </label>
-                    </div>
-                    <div class="buttons">
-                        <button class="button" data-action="add">submit</button>
-                    </div>
-                </div>
+        <div class="container database-wrapper">
+            <div class="database-wrapper_inputs">
+                <label for="database-id">
+                    database-id
+                    <input id="database-id" name="id" type="text">
+                </label>
             </div>
-            <div class="canvas-wrapper canvas-wrapper_local">
-                <canvas id="local_canvas"></canvas>
+            <div class="buttons">
+                <button class="button" data-action="add">submit</button>
             </div>
         </div>
+    </div>
+    <div class="canvas-wrapper canvas-wrapper_local">
+        <canvas id="local_canvas"></canvas>
+    </div>
+</div>
 
-        <div class="list-container"></div>
-        <script src="index.js"></script>
-    </body>
+<div class="list-container"></div>
+<script src="index.js"></script>
+</body>
 </html>
