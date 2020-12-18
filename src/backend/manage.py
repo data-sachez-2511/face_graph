@@ -26,6 +26,8 @@ class Manage:
         if with_detect:
             faces, embeds = self.pipe(image, with_detect=with_detect)
         else:
+            if image.shape != (112, 112, 3):
+                return 'Face size must be 112x112.'
             faces = [image]
             embeds = self.pipe(image, with_detect=with_detect)
         if len(faces) == 0:
@@ -60,9 +62,8 @@ class Manage:
         for i in range(len(labels[0])):
             for face in Face.select().where(Face.id == labels[0][i]):
                 result.append({'image': face.face_blob, 'id': str(face.id), 'meta': face.meta,
-                               'prob': normalize_prob(distances[0][i])})
+                               'prob': normalize_prob(distances[0][i]), 'score': distances[0][i]})
         result = sorted(result, key=lambda x: x['prob'], reverse=True)
-        print(len(result))
         return result
 
     def neighbors(self, face_id):

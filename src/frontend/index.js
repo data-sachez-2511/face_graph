@@ -41,7 +41,7 @@ const drawDisclaimer1 = (info) => {
         return `
         <div class="disclaimer green">
 <!--            <p>id = ${info.id}</p>-->
-            <span class="badge badge-success">${info.prob}</span>
+            <span class="badge badge-success">${info.prob.toFixed(1)}</span>
         </div> 
     `
     }
@@ -49,14 +49,14 @@ const drawDisclaimer1 = (info) => {
         return `
         <div class="disclaimer red">
 <!--            <p>id = ${info.id}</p>-->
-            <span class="badge badge-important">${info.prob}</span>
+            <span class="badge badge-important">${info.prob.toFixed(1)}</span>
         </div> 
     `
     }
     return `
         <div class="disclaimer orange">
 <!--            <p>id = ${info.id}</p>-->
-            <span class="badge badge-warning">${info.prob}</span>
+            <span class="badge badge-warning">${info.prob.toFixed(1)}</span>
         </div> 
     `
 
