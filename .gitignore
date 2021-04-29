@@ -1,0 +1,16 @@
+/src/backend/db_utils/__pycache__/__init__.cpython-36.pyc
+/src/backend/db_utils/__pycache__/config.cpython-36.pyc
+/src/backend/db_utils/__pycache__/hnsw.cpython-36.pyc
+/src/backend/db_utils/__pycache__/sqlite.cpython-36.pyc
+/src/backend/face_utils/__pycache__/__init__.cpython-36.pyc
+/src/backend/face_utils/__pycache__/config.cpython-36.pyc
+/src/backend/face_utils/__pycache__/detector.cpython-36.pyc
+/src/backend/face_utils/__pycache__/embedder.cpython-36.pyc
+/src/backend/face_utils/__pycache__/facepipe.cpython-36.pyc
+/src/backend/face_utils/__pycache__/utils_.cpython-36.pyc
+/src/backend/face_utils/align/__pycache__/insightface.cpython-36.pyc
+/src/backend/face_utils/utils/__pycache__/__init__.cpython-36.pyc
+/src/backend/face_utils/utils/__pycache__/box_utils.cpython-36.pyc
+/src/backend/face_utils/utils/nms/__pycache__/__init__.cpython-36.pyc
+/src/backend/face_utils/utils/nms/__pycache__/py_cpu_nms.cpython-36.pyc
+/.idea
